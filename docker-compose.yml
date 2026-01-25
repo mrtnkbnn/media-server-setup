@@ -1,5 +1,3 @@
-version: '3.8'
-
 volumes:
   jellyfin_data: {}
   radarr_data: {}
