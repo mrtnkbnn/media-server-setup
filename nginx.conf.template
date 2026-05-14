@@ -1,0 +1,96 @@
+server {
+  listen 80 default_server;
+  server_name _;
+  return 404;
+}
+
+server {
+  listen 80;
+  server_name ${JELLYFIN_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://jellyfin:8096;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${RADARR_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://gluetun:7878;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${SONARR_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://gluetun:8989;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${BAZARR_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://gluetun:6767;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${PROWLARR_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://gluetun:9696;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${DELUGE_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://gluetun:8112;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${SEERR_DOMAIN};
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://seerr:5055;
+  }
+}
