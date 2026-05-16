@@ -140,8 +140,9 @@ connections. Seerr is not behind the VPN, so it should connect to Jellyfin at
 
 Homepage is also not behind the VPN. Its configuration is stored in
 `config/homepage`, so dashboard links can be versioned with this repo. The
-initial config uses links and Docker container status only; API-key widgets can
-be added later after the apps are configured.
+initial config includes API-key widget placeholders. After the apps are
+configured, copy their API keys into `.env` under the `HOMEPAGE_VAR_*` values
+and restart Homepage.
 
 ### Deluge
 
@@ -232,6 +233,26 @@ Recommended settings:
   formats and import behavior managed in Radarr and Sonarr.
 - If only you use the server, approvals can stay disabled; if other Jellyfin
   users can log in, enable request approvals or restrict permissions.
+
+### Homepage widgets
+
+Open `http://homepage.lan`.
+
+Homepage links work immediately. Service widgets need API keys after first-run
+setup:
+
+- Jellyfin: copy an API key into `HOMEPAGE_VAR_JELLYFIN_API_KEY`.
+- Seerr: copy an API key into `HOMEPAGE_VAR_SEERR_API_KEY`.
+- Radarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_RADARR_API_KEY`.
+- Sonarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_SONARR_API_KEY`.
+- Bazarr: copy its API key into `HOMEPAGE_VAR_BAZARR_API_KEY`.
+- Prowlarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_PROWLARR_API_KEY`.
+
+After updating `.env`, restart Homepage:
+
+```bash
+docker compose up -d homepage
+```
 
 ### Jellyfin
 
