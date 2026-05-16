@@ -53,19 +53,31 @@ instead of copying them. Deluge can continue seeding from
 
 1. Install Docker and the Compose plugin on the Ubuntu server.
 
-2. Copy the environment example:
+2. Clone this repository under `/opt`.
+
+   `/opt` is a good fit for a long-running server stack because the compose
+   files are application/configuration, not personal project files.
+
+   ```bash
+   sudo mkdir -p /opt/media-server-setup
+   sudo chown "$USER:$USER" /opt/media-server-setup
+   git clone git@github.com:mrtnkbnn/media-server-setup.git /opt/media-server-setup
+   cd /opt/media-server-setup
+   ```
+
+3. Copy the environment example:
 
    ```bash
    cp .env.example .env
    ```
 
-3. Set `PUID` and `PGID` to your server user:
+4. Set `PUID` and `PGID` to your server user:
 
    ```bash
    id
    ```
 
-4. Fill in the Mullvad WireGuard values in `.env`.
+5. Fill in the Mullvad WireGuard values in `.env`.
 
    Required values:
 
@@ -77,7 +89,7 @@ instead of copying them. Deluge can continue seeding from
 
    Get these from a Mullvad WireGuard configuration. Do not commit `.env`.
 
-5. Make the `.lan` names resolve on your LAN.
+6. Make the `.lan` names resolve on your LAN.
 
    For a quick single-machine test, add entries to your client machine's hosts
    file pointing at the mini PC IP:
@@ -89,13 +101,13 @@ instead of copying them. Deluge can continue seeding from
    For normal LAN use, add equivalent local DNS records in your router or DNS
    server.
 
-6. Start the stack:
+7. Start the stack:
 
    ```bash
    docker compose up -d
    ```
 
-7. Check the VPN container logs:
+8. Check the VPN container logs:
 
    ```bash
    docker logs gluetun
@@ -104,7 +116,7 @@ instead of copying them. Deluge can continue seeding from
    Do not continue with torrenting until Gluetun reports a healthy VPN
    connection.
 
-8. Open the dashboard:
+9. Open the dashboard:
 
    ```text
    http://homepage.lan
