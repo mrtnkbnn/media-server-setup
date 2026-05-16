@@ -2,3 +2,10 @@
 nginx.conf
 server.crt
 server.key
+
+# Homepage creates these optional local files on first startup.
+config/homepage/custom.css
+config/homepage/custom.js
+config/homepage/kubernetes.yaml
+config/homepage/proxmox.yaml
+config/homepage/logs/

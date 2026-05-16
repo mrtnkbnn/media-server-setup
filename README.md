@@ -141,8 +141,7 @@ connections. Seerr is not behind the VPN, so it should connect to Jellyfin at
 Homepage is also not behind the VPN. Its configuration is stored in
 `config/homepage`, so dashboard links can be versioned with this repo. The
 initial config includes API-key widget placeholders. After the apps are
-configured, copy their API keys into `.env` under the `HOMEPAGE_VAR_*` values
-and restart Homepage.
+configured, copy their API keys into `.env` and restart Homepage.
 
 ### qBittorrent
 
@@ -152,7 +151,7 @@ Recommended settings:
 
 - Log in with username `admin`. qBittorrent prints the temporary password in its
   container logs on first startup: `docker logs qbittorrent`.
-- Change the Web UI password, then copy it into `HOMEPAGE_VAR_QBITTORRENT_PASSWORD`.
+- Change the Web UI password, then copy it into `QBITTORRENT_PASSWORD`.
 - Set the default save path to `/data/downloads/torrents`.
 - Create category `radarr` with save path `/data/downloads/torrents/movies`.
 - Create category `sonarr` with save path `/data/downloads/torrents/tv`.
@@ -243,14 +242,14 @@ Open `http://homepage.lan`.
 Homepage links work immediately. Service widgets need API keys after first-run
 setup:
 
-- Jellyfin: copy an API key into `HOMEPAGE_VAR_JELLYFIN_API_KEY`.
-- Seerr: copy an API key into `HOMEPAGE_VAR_SEERR_API_KEY`.
-- Radarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_RADARR_API_KEY`.
-- Sonarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_SONARR_API_KEY`.
-- Bazarr: copy its API key into `HOMEPAGE_VAR_BAZARR_API_KEY`.
-- Prowlarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_PROWLARR_API_KEY`.
+- Jellyfin: copy an API key into `JELLYFIN_API_KEY`.
+- Seerr: copy an API key into `SEERR_API_KEY`.
+- Radarr: copy `Settings -> General -> Security -> API Key` into `RADARR_API_KEY`.
+- Sonarr: copy `Settings -> General -> Security -> API Key` into `SONARR_API_KEY`.
+- Bazarr: copy its API key into `BAZARR_API_KEY`.
+- Prowlarr: copy `Settings -> General -> Security -> API Key` into `PROWLARR_API_KEY`.
 - qBittorrent: copy the Web UI username and password into
-  `HOMEPAGE_VAR_QBITTORRENT_USERNAME` and `HOMEPAGE_VAR_QBITTORRENT_PASSWORD`.
+  `QBITTORRENT_USERNAME` and `QBITTORRENT_PASSWORD`.
 
 After updating `.env`, restart Homepage:
 
