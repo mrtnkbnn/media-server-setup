@@ -4,7 +4,7 @@ volumes:
   sonarr_data: {}
   bazarr_data: {}
   prowlarr_data: {}
-  deluge_data: {}
+  qbittorrent_data: {}
   gluetun_data: {}
   seerr_data: {}
 
@@ -25,7 +25,7 @@ services:
       - SONARR_DOMAIN=${SONARR_DOMAIN}
       - BAZARR_DOMAIN=${BAZARR_DOMAIN}
       - PROWLARR_DOMAIN=${PROWLARR_DOMAIN}
-      - DELUGE_DOMAIN=${DELUGE_DOMAIN}
+      - QBITTORRENT_DOMAIN=${QBITTORRENT_DOMAIN}
       - SEERR_DOMAIN=${SEERR_DOMAIN}
     volumes:
       - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
@@ -43,6 +43,8 @@ services:
       - HOMEPAGE_VAR_SONARR_API_KEY=${HOMEPAGE_VAR_SONARR_API_KEY}
       - HOMEPAGE_VAR_BAZARR_API_KEY=${HOMEPAGE_VAR_BAZARR_API_KEY}
       - HOMEPAGE_VAR_PROWLARR_API_KEY=${HOMEPAGE_VAR_PROWLARR_API_KEY}
+      - HOMEPAGE_VAR_QBITTORRENT_USERNAME=${HOMEPAGE_VAR_QBITTORRENT_USERNAME}
+      - HOMEPAGE_VAR_QBITTORRENT_PASSWORD=${HOMEPAGE_VAR_QBITTORRENT_PASSWORD}
     volumes:
       - ./config/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -61,7 +63,7 @@ services:
       - WIREGUARD_PRIVATE_KEY=${MULLVAD_WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESSES=${MULLVAD_WIREGUARD_ADDRESSES}
       - SERVER_COUNTRIES=${MULLVAD_SERVER_COUNTRIES}
-      - FIREWALL_INPUT_PORTS=6767,7878,8112,8989,9696
+      - FIREWALL_INPUT_PORTS=6767,7878,8080,8989,9696
     volumes:
       - gluetun_data:/gluetun
   jellyfin:
@@ -156,9 +158,9 @@ services:
       - PGID=${PGID}
     volumes:
       - prowlarr_data:/config
-  deluge:
-    image: linuxserver/deluge:latest
-    container_name: deluge
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
     restart: unless-stopped
     network_mode: service:gluetun
     depends_on:
@@ -167,6 +169,7 @@ services:
       - TZ=${TIMEZONE}
       - PUID=${PUID}
       - PGID=${PGID}
+      - WEBUI_PORT=8080
     volumes:
-      - deluge_data:/config
+      - qbittorrent_data:/config
       - ${DATA_DIR}:/data

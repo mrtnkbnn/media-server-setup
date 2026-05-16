@@ -41,12 +41,17 @@
           key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
 
 - Downloads:
-    - Deluge:
-        icon: deluge.png
-        href: http://deluge.lan
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: http://qbittorrent.lan
         description: Torrent client
         server: media-server
-        container: deluge
+        container: qbittorrent
+        widget:
+          type: qbittorrent
+          url: http://gluetun:8080
+          username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
     - Prowlarr:
         icon: prowlarr.png
         href: http://prowlarr.lan

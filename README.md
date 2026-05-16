@@ -1,13 +1,13 @@
 # Media server setup
 
 Docker Compose setup for a mini PC media server running Homepage, Jellyfin,
-Seerr, Radarr, Sonarr, Bazarr, Prowlarr and Deluge.
+Seerr, Radarr, Sonarr, Bazarr, Prowlarr and qBittorrent.
 
 The current setup targets Ubuntu Server with an external media disk mounted at
-`/mnt/media`. Deluge, Prowlarr, Radarr, Sonarr and Bazarr share a Mullvad VPN
-connection through Gluetun. Jellyfin and nginx stay outside the VPN so LAN media
-streaming and reverse proxy access remain simple. Homepage provides the LAN
-dashboard for the stack.
+`/mnt/media`. qBittorrent, Prowlarr, Radarr, Sonarr and Bazarr share a Mullvad
+VPN connection through Gluetun. Jellyfin and nginx stay outside the VPN so LAN
+media streaming and reverse proxy access remain simple. Homepage provides the
+LAN dashboard for the stack.
 
 ## Services
 
@@ -20,7 +20,7 @@ dashboard for the stack.
 | Sonarr | `sonarr.lan` | Routed through Mullvad VPN |
 | Bazarr | `bazarr.lan` | Routed through Mullvad VPN |
 | Prowlarr | `prowlarr.lan` | Routed through Mullvad VPN |
-| Deluge | `deluge.lan` | Routed through Mullvad VPN |
+| qBittorrent | `qbittorrent.lan` | Routed through Mullvad VPN |
 
 ## Directory layout
 
@@ -45,7 +45,7 @@ inside the apps:
 ```
 
 Using one shared `/data` mount lets Radarr and Sonarr hardlink imported files
-instead of copying them. Deluge can continue seeding from
+instead of copying them. qBittorrent can continue seeding from
 `/data/downloads/torrents/...`, while Jellyfin sees the same file content under
 `/data/library/...` without doubling disk usage.
 
@@ -95,7 +95,7 @@ instead of copying them. Deluge can continue seeding from
    file pointing at the mini PC IP:
 
    ```text
-   192.168.1.10 homepage.lan jellyfin.lan seerr.lan radarr.lan sonarr.lan bazarr.lan prowlarr.lan deluge.lan
+   192.168.1.10 homepage.lan jellyfin.lan seerr.lan radarr.lan sonarr.lan bazarr.lan prowlarr.lan qbittorrent.lan
    ```
 
    For normal LAN use, add equivalent local DNS records in your router or DNS
@@ -130,7 +130,7 @@ API keys, and those schemas can change between releases. Configure them once in
 the web UIs, or later add an explicit API bootstrap script if repeatability
 becomes worth the maintenance.
 
-Networking detail: Radarr, Sonarr, Bazarr, Prowlarr and Deluge use
+Networking detail: Radarr, Sonarr, Bazarr, Prowlarr and qBittorrent use
 `network_mode: service:gluetun`, so they share Gluetun's network namespace.
 Between those apps, use host `localhost` with the target app port. Do not use
 Docker service names like `radarr` or `sonarr` for VPN-routed app-to-app
@@ -144,16 +144,18 @@ initial config includes API-key widget placeholders. After the apps are
 configured, copy their API keys into `.env` under the `HOMEPAGE_VAR_*` values
 and restart Homepage.
 
-### Deluge
+### qBittorrent
 
-Open `http://deluge.lan`.
+Open `http://qbittorrent.lan`.
 
 Recommended settings:
 
-- Enable the Label plugin.
-- Set the `radarr` label download location to `/data/downloads/torrents/movies`.
-- Set the `sonarr` label download location to `/data/downloads/torrents/tv`.
-- Use categories/labels from Radarr and Sonarr if you enable the Label plugin.
+- Log in with username `admin`. qBittorrent prints the temporary password in its
+  container logs on first startup: `docker logs qbittorrent`.
+- Change the Web UI password, then copy it into `HOMEPAGE_VAR_QBITTORRENT_PASSWORD`.
+- Set the default save path to `/data/downloads/torrents`.
+- Create category `radarr` with save path `/data/downloads/torrents/movies`.
+- Create category `sonarr` with save path `/data/downloads/torrents/tv`.
 - Keep seeding enabled according to your tracker rules.
 
 Mullvad no longer provides port forwarding, so seeding can still work but may be
@@ -166,8 +168,8 @@ Open `http://prowlarr.lan`.
 Recommended settings:
 
 - Add indexers first.
-- Add Deluge as a download client using host `localhost`, port `8112`, or manage
-  download clients only inside Radarr/Sonarr.
+- Add qBittorrent as a download client using host `localhost`, port `8080`, or
+  manage download clients only inside Radarr/Sonarr.
 - After Radarr and Sonarr have completed their initial setup, add them as
   Prowlarr apps using host `localhost`, ports `7878` and `8989`.
 - Let Prowlarr sync indexers to Radarr and Sonarr instead of configuring the same
@@ -180,7 +182,7 @@ Open `http://radarr.lan`.
 Recommended settings:
 
 - Root folder: `/data/library/movies`.
-- Download client: Deluge at host `localhost`, port `8112`.
+- Download client: qBittorrent at host `localhost`, port `8080`.
 - Category: `radarr`.
 - Enable completed download handling.
 - Enable hardlinks instead of copy.
@@ -198,7 +200,7 @@ Open `http://sonarr.lan`.
 Recommended settings:
 
 - Root folder: `/data/library/tv`.
-- Download client: Deluge at host `localhost`, port `8112`.
+- Download client: qBittorrent at host `localhost`, port `8080`.
 - Category: `sonarr`.
 - Enable completed download handling.
 - Enable hardlinks instead of copy.
@@ -247,6 +249,8 @@ setup:
 - Sonarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_SONARR_API_KEY`.
 - Bazarr: copy its API key into `HOMEPAGE_VAR_BAZARR_API_KEY`.
 - Prowlarr: copy `Settings -> General -> Security -> API Key` into `HOMEPAGE_VAR_PROWLARR_API_KEY`.
+- qBittorrent: copy the Web UI username and password into
+  `HOMEPAGE_VAR_QBITTORRENT_USERNAME` and `HOMEPAGE_VAR_QBITTORRENT_PASSWORD`.
 
 After updating `.env`, restart Homepage:
 
