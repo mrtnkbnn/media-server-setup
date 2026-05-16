@@ -61,7 +61,7 @@ instead of copying them. Deluge can continue seeding from
    ```bash
    sudo mkdir -p /opt/media-server-setup
    sudo chown "$USER:$USER" /opt/media-server-setup
-   git clone git@github.com:mrtnkbnn/media-server-setup.git /opt/media-server-setup
+   git clone https://github.com/mrtnkbnn/media-server-setup.git /opt/media-server-setup
    cd /opt/media-server-setup
    ```
 
