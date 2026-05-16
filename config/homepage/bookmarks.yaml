@@ -1,0 +1,7 @@
+- Documentation:
+    - Docker Compose:
+        - icon: docker.png
+          href: https://docs.docker.com/compose/
+    - Homepage:
+        - icon: homepage.png
+          href: https://gethomepage.dev/

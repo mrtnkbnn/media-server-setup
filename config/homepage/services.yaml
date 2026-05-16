@@ -1,0 +1,63 @@
+- Media:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: http://jellyfin.lan
+        description: Media streaming
+        server: media-server
+        container: jellyfin
+    - Seerr:
+        icon: seerr.png
+        href: http://seerr.lan
+        description: Media discovery and requests
+        server: media-server
+        container: seerr
+    - Radarr:
+        icon: radarr.png
+        href: http://radarr.lan
+        description: Movie automation
+        server: media-server
+        container: radarr
+    - Sonarr:
+        icon: sonarr.png
+        href: http://sonarr.lan
+        description: TV automation
+        server: media-server
+        container: sonarr
+
+- Downloads:
+    - Deluge:
+        icon: deluge.png
+        href: http://deluge.lan
+        description: Torrent client
+        server: media-server
+        container: deluge
+    - Prowlarr:
+        icon: prowlarr.png
+        href: http://prowlarr.lan
+        description: Indexer manager
+        server: media-server
+        container: prowlarr
+    - Bazarr:
+        icon: bazarr.png
+        href: http://bazarr.lan
+        description: Subtitle automation
+        server: media-server
+        container: bazarr
+
+- System:
+    - Gluetun:
+        icon: gluetun.png
+        description: Mullvad VPN gateway
+        server: media-server
+        container: gluetun
+    - nginx:
+        icon: nginx.png
+        description: LAN reverse proxy
+        server: media-server
+        container: nginx
+    - Homepage:
+        icon: homepage.png
+        href: http://homepage.lan
+        description: This dashboard
+        server: media-server
+        container: homepage

@@ -1,0 +1,17 @@
+title: Media Server
+description: Mini PC media server dashboard
+theme: dark
+color: slate
+target: _self
+headerStyle: boxed
+hideVersion: true
+layout:
+  Media:
+    style: row
+    columns: 4
+  Downloads:
+    style: row
+    columns: 3
+  System:
+    style: row
+    columns: 3

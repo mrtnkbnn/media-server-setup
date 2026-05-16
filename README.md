@@ -1,17 +1,19 @@
 # Media server setup
 
-Docker Compose setup for a mini PC media server running Jellyfin, Seerr, Radarr,
-Sonarr, Bazarr, Prowlarr and Deluge.
+Docker Compose setup for a mini PC media server running Homepage, Jellyfin,
+Seerr, Radarr, Sonarr, Bazarr, Prowlarr and Deluge.
 
 The current setup targets Ubuntu Server with an external media disk mounted at
 `/mnt/media`. Deluge, Prowlarr, Radarr, Sonarr and Bazarr share a Mullvad VPN
 connection through Gluetun. Jellyfin and nginx stay outside the VPN so LAN media
-streaming and reverse proxy access remain simple.
+streaming and reverse proxy access remain simple. Homepage provides the LAN
+dashboard for the stack.
 
 ## Services
 
 | Service | Default host | Notes |
 | --- | --- | --- |
+| Homepage | `homepage.lan` | Dashboard with preconfigured service links |
 | Jellyfin | `jellyfin.lan` | Direct network, Intel `/dev/dri` passthrough for hardware acceleration |
 | Seerr | `seerr.lan` | Direct network, discovery and requests for Jellyfin/Radarr/Sonarr |
 | Radarr | `radarr.lan` | Routed through Mullvad VPN |
@@ -81,7 +83,7 @@ instead of copying them. Deluge can continue seeding from
    file pointing at the mini PC IP:
 
    ```text
-   192.168.1.10 jellyfin.lan seerr.lan radarr.lan sonarr.lan bazarr.lan prowlarr.lan deluge.lan
+   192.168.1.10 homepage.lan jellyfin.lan seerr.lan radarr.lan sonarr.lan bazarr.lan prowlarr.lan deluge.lan
    ```
 
    For normal LAN use, add equivalent local DNS records in your router or DNS
@@ -102,6 +104,12 @@ instead of copying them. Deluge can continue seeding from
    Do not continue with torrenting until Gluetun reports a healthy VPN
    connection.
 
+8. Open the dashboard:
+
+   ```text
+   http://homepage.lan
+   ```
+
 ## First-run application setup
 
 These app settings are intentionally not committed as prebuilt config files.
@@ -117,6 +125,11 @@ Docker service names like `radarr` or `sonarr` for VPN-routed app-to-app
 connections. Seerr is not behind the VPN, so it should connect to Jellyfin at
 `http://jellyfin:8096` and to Radarr/Sonarr through Gluetun at
 `http://gluetun:7878` and `http://gluetun:8989`.
+
+Homepage is also not behind the VPN. Its configuration is stored in
+`config/homepage`, so dashboard links can be versioned with this repo. The
+initial config uses links and Docker container status only; API-key widgets can
+be added later after the apps are configured.
 
 ### Deluge
 
@@ -237,8 +250,9 @@ docker compose up -d
 
 ## Notes
 
-- nginx uses `nginx.conf.template`; the official nginx image substitutes domain
-  values from `.env` at container startup.
+- nginx uses `config/nginx/default.conf.template`; the official nginx image
+  substitutes domain values from `.env` at container startup.
+- Homepage config lives in `config/homepage`.
 - Only HTTP port `80` is exposed by default for LAN use. Add TLS later if you
   expose anything outside your LAN.
 - Keep the VPN-routed services behind Gluetun unless you have a specific reason

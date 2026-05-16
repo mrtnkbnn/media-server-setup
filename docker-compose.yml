@@ -14,10 +14,12 @@ services:
     container_name: nginx
     restart: unless-stopped
     depends_on:
+      - homepage
       - jellyfin
       - gluetun
       - seerr
     environment:
+      - HOMEPAGE_DOMAIN=${HOMEPAGE_DOMAIN}
       - JELLYFIN_DOMAIN=${JELLYFIN_DOMAIN}
       - RADARR_DOMAIN=${RADARR_DOMAIN}
       - SONARR_DOMAIN=${SONARR_DOMAIN}
@@ -26,9 +28,18 @@ services:
       - DELUGE_DOMAIN=${DELUGE_DOMAIN}
       - SEERR_DOMAIN=${SEERR_DOMAIN}
     volumes:
-      - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./config/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
     ports:
       - 80:80
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_DOMAIN}
+    volumes:
+      - ./config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   gluetun:
     image: qmcgaw/gluetun:latest
     container_name: gluetun
